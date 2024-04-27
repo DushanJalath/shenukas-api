@@ -16,7 +16,7 @@ user_collection=db['user']
 app=FastAPI()
 
 @app.get('/')
-async def init():
+async def initialReq():
     return {"Hello":"World"}
 
 @app.get('/logIn')
