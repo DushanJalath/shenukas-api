@@ -4,7 +4,7 @@ from pymongo import MongoClient
 
 
 
-client = MongoClient('mongodb://localhost:27017/')
+client = MongoClient('mongodb+srv://dushanprabash:RIm0P0lBP8n2Jb7h@shenukacluster.cjwoari.mongodb.net/')
 
 db = client['grocery']  
 winter_collection = db['winter_items'] 
