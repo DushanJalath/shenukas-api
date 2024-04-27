@@ -15,6 +15,10 @@ user_collection=db['user']
 
 app=FastAPI()
 
+@app.get('/')
+async def initialReq():
+    return {"Hello":"World"}
+
 @app.get('/logIn')
 async def login(user:User):
     user = user_collection.find_one({"username": user.username})
