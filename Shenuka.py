@@ -3,6 +3,7 @@ from fastapi import FastAPI,HTTPException
 from models import Item,User
 from typing import List
 from pymongo import MongoClient
+import numpy as np
 
 client = MongoClient('mongodb+srv://dushanprabash:RIm0P0lBP8n2Jb7h@shenukacluster.cjwoari.mongodb.net/')
 
@@ -24,6 +25,7 @@ async def login(user:User):
 
 @app.post('/getItems')
 async def getItems(items: List[Item],season: str):
+    lenght=len(items)
     couples = []
     for i in range(len(items)):
         for j in range(i + 1, len(items)):
@@ -35,15 +37,15 @@ async def getItems(items: List[Item],season: str):
             result_doc = winter_collection.find_one(search_query)
             if result_doc:
                 results[couple]=result_doc["count"]
-        sorted_results = dict(sorted(results.items(), key=lambda item: item[1]))
-    if season=="Summere":
+        sorted_results = dict(sorted(results.items(), key=lambda item: item[1],reverse=True))
+    if season=="Summer":
         results={}
         for couple in couples:
             search_query = {"Items": couple}
             result_doc = summer_collection.find_one(search_query)
             if result_doc:
                 results[couple]=result_doc["count"]
-        sorted_results = dict(sorted(results.items(), key=lambda item: item[1]))
+        sorted_results = dict(sorted(results.items(), key=lambda item: item[1],reverse=True))
     if season=="Spring":
         results={}
         for couple in couples:
@@ -51,15 +53,23 @@ async def getItems(items: List[Item],season: str):
             result_doc = spring_collection.find_one(search_query)
             if result_doc:
                 results[couple]=result_doc["count"]
-        sorted_results = dict(sorted(results.items(), key=lambda item: item[1]))
-    if season=="Spring":
+        sorted_results = dict(sorted(results.items(), key=lambda item: item[1],reverse=True))
+    if season=="Fall":
         results={}
         for couple in couples:
             search_query = {"Items": couple}
-            result_doc = spring_collection.find_one(search_query)
+            result_doc = fall_collection.find_one(search_query)
             if result_doc:
                 results[couple]=result_doc["count"]
-        sorted_results = dict(sorted(results.items(), key=lambda item: item[1]))
-    return sorted_results
+        sorted_results = dict(sorted(results.items(), key=lambda item: item[1],reverse=True))
+    prod_set=[]
+    for key,val in sorted_results.items():
+        key_split=key.split(" : ")
+        if key_split[0] not in prod_set :
+            prod_set.append(key_split[0])
+        if key_split[1] not in prod_set:
+            prod_set.append(key_split[1])
+        
+    return prod_set
     
 
