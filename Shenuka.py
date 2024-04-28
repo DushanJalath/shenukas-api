@@ -22,7 +22,7 @@ async def initialReq():
     
 @app.post('/login')
 async def login(user: User):
-    res_user = user_collection.find_one({"username": user.username})
+    res_user =await user_collection.find_one({"username": user.username})
     if not res_user or not user.password == res_user["password"]:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     return res_user
