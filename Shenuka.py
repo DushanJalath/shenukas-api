@@ -20,12 +20,13 @@ app=FastAPI()
 async def initialReq():
     return {"Hello":"World"}
     
-@app.post('/logIn')
-async def login(user:User):
+@app.post('/login')
+async def login(user: User):
     res_user = user_collection.find_one({"username": user.username})
-    if not user or not user.password==user["password"]:
+    if not res_user or not user.password == res_user["password"]:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
     return res_user
+
 
 @app.post('/getItems')
 async def getItems(items: List[Item],season: str):
