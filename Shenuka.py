@@ -20,7 +20,7 @@ app=FastAPI()
 async def initialReq():
     return {"Hello":"World"}
 
-@app.get('/logIn')
+@app.post('/logIn')
 async def login(user:User):
     user = user_collection.find_one({"username": user.username})
     if not user or not user.password==user["password"]:
