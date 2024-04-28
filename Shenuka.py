@@ -22,10 +22,15 @@ async def initialReq():
     
 @app.post('/login')
 async def login(user: User):
-    res_user =await user_collection.find_one({"username": user.username})
+    res_user = user_collection.find_one({"username": user.username})
     if not res_user or not user.password == res_user["password"]:
         raise HTTPException(status_code=401, detail="Incorrect username or password")
-    return res_user
+    
+    # Convert MongoDB ObjectId to string for serialization
+    res_user['_id'] = str(res_user['_id'])
+
+    # Exclude the '_id' field from the returned dictionary
+    return {key: value for key, value in res_user.items() if key != '_id'}
 
 
 @app.post('/getItems')
